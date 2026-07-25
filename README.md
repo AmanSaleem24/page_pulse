@@ -2,7 +2,7 @@
 
 > A fast, zero-dependency-frontend URL auditing tool. Paste any URL, get an instant SEO health report.
 
-![Page Pulse screenshot placeholder — add your own once running]
+![page_pulse home page showing an example run](image.png)
 
 ---
 
