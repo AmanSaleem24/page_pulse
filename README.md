@@ -12,6 +12,7 @@
 2. [API Contract](#api-contract)
 3. [Design Decisions](#design-decisions)
 4. [Project Structure](#project-structure)
+5. [AI Usage](#ai-usage)
 
 ---
 
@@ -182,3 +183,9 @@ page_pulse/
 ├── package.json
 └── README.md
 ```
+
+---
+
+## AI Usage
+
+AI tooling (Antigravity pair programmer) was utilized during the development of Page Pulse to accelerate initial project scaffolding, assist in designing the dark glassmorphism UI system, and write comprehensive Jest test suites (unit tests for Cheerio parsers and integration tests for Express error handling). AI assistance was also leveraged to debug low-level networking edge cases — specifically diagnosing HTTP/2 socket drops with `undici` and transitioning the fetch layer to Node's native `http`/`https` modules for HTTP/1.1 compatibility. All core architectural decisions, code verification, manual testing, and design choices were reviewed, validated, and finalized by the developer.
