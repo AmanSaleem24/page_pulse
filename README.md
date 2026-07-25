@@ -11,8 +11,7 @@
 1. [Setup & Running Locally](#setup--running-locally)
 2. [API Contract](#api-contract)
 3. [Design Decisions](#design-decisions)
-4. [Deploying to Render](#deploying-to-render)
-5. [Pushing to GitHub](#pushing-to-github)
+4. [Project Structure](#project-structure)
 
 ---
 
@@ -37,14 +36,14 @@ npm install
 npm run dev
 
 # 4. Open in browser
-open http://localhost:3000
+open http://localhost:5001
 ```
 
 ### Environment Variables
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `PORT`   | `3000`  | The port the server listens on |
+| `PORT`   | `5001`  | The port the server listens on |
 
 Set a custom port:
 ```bash
@@ -133,8 +132,6 @@ Stack traces are **never** included in error responses.
 
 ## Design Decisions
 
-> **Note to candidate:** The three sections below are placeholders for you to fill in with your own reasoning. Each decision is labeled so you know *what* was decided — write 2–3 sentences explaining *why* you made that choice, in your own words. Don't copy AI-generated filler.
-
 ---
 
 ### Decision 1: Pure parsing functions isolated in `src/parser.js`
@@ -157,54 +154,7 @@ Stack traces are **never** included in error responses.
 
 **What was decided:** The Express server mounts the static `public/` directory at the root path and the `/api/audit` route on the same port. There is no separate frontend dev server or build step.
 
-**Reasoning:** Serving the static SPA directly from Express keeps the architecture simple, fast, and lightweight. It eliminates CORS issues between frontend and backend and simplifies deployment to platforms like Render to a single command (`npm start`) without needing extra build pipelines or multi-service setups.
-
----
-
-## Deploying to Render
-
-Render's free tier supports Node.js web services with zero-config deploys.
-
-### Steps
-
-1. **Push to GitHub** (see next section first if you haven't already)
-
-2. **Create a Render account** at [render.com](https://render.com) and sign in
-
-3. **New → Web Service** — connect your GitHub account and select the `page_pulse` repo
-
-4. **Configure the service:**
-   | Setting         | Value                  |
-   |-----------------|------------------------|
-   | Environment     | `Node`                 |
-   | Build Command   | `npm install`          |
-   | Start Command   | `npm start`            |
-   | Instance Type   | `Free`                 |
-
-5. **Environment Variables** — Render sets `PORT` automatically; you don't need to add it
-
-6. **Click "Create Web Service"** — Render will build and deploy. First deploy takes ~2 minutes.
-
-7. Your live URL will be `https://page-pulse-XXXX.onrender.com` (shown in the dashboard)
-
-> ⚠️ Free tier services spin down after 15 minutes of inactivity. The first request after spin-down takes ~30 seconds.
-
----
-
-## Pushing to GitHub
-
-```bash
-# 1. Create a new PUBLIC repo on github.com (do NOT initialise with README)
-#    Name it: page_pulse
-
-# 2. Add remote
-git remote add origin git@github.com:AmanSaleem24/page_pulse.git
-
-# 3. Push
-git push -u origin main
-```
-
-Your GitHub repo URL: `https://github.com/AmanSaleem24/page_pulse`
+**Reasoning:** Serving the static SPA directly from Express keeps the architecture simple, fast, and lightweight. It eliminates CORS issues between frontend and backend and simplifies deployment to any host to a single command (`npm start`) without needing extra build pipelines or multi-service setups.
 
 ---
 
