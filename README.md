@@ -27,8 +27,8 @@
 
 ```bash
 # 1. Clone the repo
-git clone https://github.com/YOUR_USERNAME/page-pulse.git
-cd page-pulse
+git clone https://github.com/AmanSaleem24/page_pulse.git
+cd page_pulse
 
 # 2. Install dependencies
 npm install
@@ -141,15 +141,15 @@ Stack traces are **never** included in error responses.
 
 **What was decided:** All cheerio-based extraction logic (`extractTitle`, `countH1s`, etc.) lives in a single file of pure functions that accept a loaded cheerio instance and return plain values. The route handler calls these functions but does not contain parsing logic itself.
 
-**TODO — fill in your reasoning:** Why did you separate parsing into its own module? What does this make easier? How does it affect testability?
+**Reasoning:** Separating DOM parsing into pure, deterministic functions cleanly decouples content extraction from Express request handling and network I/O. This makes unit testing trivial — we can test edge cases (missing tags, empty alt attributes, word count edge cases) in `parser.test.js` using local HTML fixtures without mocking Express requests or network sockets.
 
 ---
 
-### Decision 2: `AbortController` + error-code inspection for error classification
+### Decision 2: Native `http`/`https` fetcher + custom status mapping for error classification
 
-**What was decided:** The fetch timeout uses a native `AbortController` rather than a library-level timeout option. DNS/connection errors are detected by inspecting `err.name` (for `AbortError`) and `err.cause.code` (for `ENOTFOUND`, `ECONNREFUSED`, etc.) to return different HTTP status codes (504 vs 502).
+**What was decided:** The fetch layer uses Node's native `http`/`https` modules wrapped with an `AbortController` timeout. Errors are classified into specific HTTP status codes (400 for bad input, 415 for non-HTML MIME types, 502 for connection/DNS failures, 504 for timeouts).
 
-**TODO — fill in your reasoning:** Why differentiate between timeout (504) and DNS failure (502)? What does this tell an API consumer? What alternative did you consider?
+**Reasoning:** Using Node's native HTTP/1.1 client ensures maximum compatibility across web servers without triggering HTTP/2 connection drops common with undici on certain targets. Differentiating error states (504 vs 502 vs 415) gives API consumers precise, actionable feedback on whether the problem was a timeout, a dead host, or an unsupported file type, rather than masking everything behind a generic 500.
 
 ---
 
@@ -157,7 +157,7 @@ Stack traces are **never** included in error responses.
 
 **What was decided:** The Express server mounts the static `public/` directory at the root path and the `/api/audit` route on the same port. There is no separate frontend dev server or build step.
 
-**TODO — fill in your reasoning:** Why did you choose this over a separate frontend server? What trade-offs does this involve? How does it affect deployment?
+**Reasoning:** Serving the static SPA directly from Express keeps the architecture simple, fast, and lightweight. It eliminates CORS issues between frontend and backend and simplifies deployment to platforms like Render to a single command (`npm start`) without needing extra build pipelines or multi-service setups.
 
 ---
 
@@ -171,7 +171,7 @@ Render's free tier supports Node.js web services with zero-config deploys.
 
 2. **Create a Render account** at [render.com](https://render.com) and sign in
 
-3. **New → Web Service** — connect your GitHub account and select the `page-pulse` repo
+3. **New → Web Service** — connect your GitHub account and select the `page_pulse` repo
 
 4. **Configure the service:**
    | Setting         | Value                  |
@@ -195,16 +195,16 @@ Render's free tier supports Node.js web services with zero-config deploys.
 
 ```bash
 # 1. Create a new PUBLIC repo on github.com (do NOT initialise with README)
-#    Name it: page-pulse
+#    Name it: page_pulse
 
-# 2. Add remote (replace YOUR_USERNAME)
-git remote add origin https://github.com/YOUR_USERNAME/page-pulse.git
+# 2. Add remote
+git remote add origin git@github.com:AmanSaleem24/page_pulse.git
 
 # 3. Push
 git push -u origin main
 ```
 
-Your GitHub repo URL (for submission): `https://github.com/YOUR_USERNAME/page-pulse`
+Your GitHub repo URL: `https://github.com/AmanSaleem24/page_pulse`
 
 ---
 
@@ -232,4 +232,3 @@ page_pulse/
 ├── package.json
 └── README.md
 ```
-# page_pulse
